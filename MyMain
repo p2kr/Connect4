@@ -1,0 +1,108 @@
+//package com.connect4;
+
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
+
+import java.io.File;
+
+public class MyMain extends Application {
+
+    private Controller controller;
+
+    public static void main(String[] args) {
+
+        launch(args);
+
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("game.fxml"));
+        GridPane rootGridPane = loader.load();
+
+        controller = loader.getController();
+        controller.createPlayground();
+
+        MenuBar menuBar = createMenu();
+        menuBar.prefWidthProperty().bind(primaryStage.widthProperty());
+
+        Pane menuPane = (Pane) rootGridPane.getChildren().get(0);
+
+        menuPane.getChildren().add(menuBar);
+
+        Scene scene = new Scene(rootGridPane);
+
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Connect Four");
+        primaryStage.setResizable(false);
+        primaryStage.show();
+    }
+
+    private MenuBar createMenu() {
+        //File Menu
+        Menu fileMenu = new Menu("File");
+        MenuItem newGame = new MenuItem("New Game");
+        newGame.setOnAction(actionEvent -> controller.resetGame());
+
+        MenuItem resetGame = new MenuItem("Reset Game");
+        resetGame.setOnAction(actionEvent -> controller.resetGame());
+
+        SeparatorMenuItem separatorMenuItem1 = new SeparatorMenuItem();
+        MenuItem exitGame = new MenuItem("Exit Game");
+        exitGame.setOnAction(actionEvent -> exitGame());
+
+        fileMenu.getItems().addAll(newGame, resetGame, separatorMenuItem1, exitGame);
+
+        //Help Menu
+        Menu helpMenu = new Menu("Help");
+        MenuItem aboutGame = new MenuItem("About Connect4");
+        aboutGame.setOnAction(actionEvent -> aboutConnect4());
+
+        SeparatorMenuItem separatorMenuItem2 = new SeparatorMenuItem();
+
+        MenuItem aboutMe = new MenuItem("About Me");
+        aboutMe.setOnAction(actionEvent -> aboutMe());
+
+        helpMenu.getItems().addAll(aboutGame, separatorMenuItem2, aboutMe);
+
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().addAll(fileMenu, helpMenu);
+
+        return menuBar;
+    }
+
+    private void exitGame() {
+        Platform.exit();
+        System.exit(0);
+    }
+
+    private void aboutMe() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("About the Developer");
+        alert.setHeaderText("Prince Kumar");
+        alert.setContentText("I am just coding for fun and learn");
+
+        alert.show();
+    }
+
+    private void aboutConnect4() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("About Connect Four");
+        alert.setHeaderText("How to Play");
+        alert.setContentText("Connect Four is a two-player connection game in which the players first choose a color and" +
+                "\n then take turns dropping colored discs from the top into a seven-column, six-row vertically suspended " +
+                "\ngrid. The pieces fall straight down, occupying the next available space within the column. The objective" +
+                "\nof the game is to be the first to form a horizontal, vertical, or diagonal line of four of one's own discs. " +
+                "\nConnect Four is a solved game. The first player can always win by playing the right moves.");
+        alert.show();
+    }
+
+}
